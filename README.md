@@ -24,7 +24,7 @@ Wird die Seite neu geladen, bleibt sie auf der aktuellen Folie stehen. Die Antwo
 | 1 | Start (A / B / Testing) | – |
 | 2 | Quiz mit QR-Code und Live-Zähler | – |
 | 3 | Quiz-Auswertung | – |
-| 4–6 | Echtes Ergebnis Ehrenkind, yfood, Berliner Zeitung | 2. Klick: wie viele richtig/falsch lagen |
+| 4–6 | Quiz-Auswertung Ehrenkind, yfood, Berliner Zeitung (links das Quiz-Bild) | 1. Klick: echtes Ergebnis · 2. Klick: wie viele richtig/falsch lagen |
 | 7 | Vorgehen | jede Zeile einzeln |
 | 8 | Überraschung: Ihr wart Teil eines A/B-Tests | – |
 | 9 | Auswertung des Tests | – |
@@ -60,6 +60,7 @@ img/                alle Bilder
 ### Typische Änderungen
 
 - **Text auf einer Folie ändern:** in `js/slides.js` den Text suchen und ersetzen.
+- **Überschriften:** Das `|` im Titel legt fest, wo die Schrift wechselt (liegt immer auf der Farbgrenze), z. B. `'Grenzen | der Methode'`.
 - **Folie verschieben oder löschen:** in `js/slides.js` den Block `{ type: … }` verschieben oder löschen.
 - **Neue Folie:** einen Block in `SLIDES` einfügen. Die verfügbaren Folientypen stehen oben in `js/slides.js`. Für eine ganz eigene Folie gibt es `{ type: 'html', html: '…' }`.
 - **Bild austauschen:** neue Datei mit demselben Namen in `img/` legen. Die Bilder `amazon-prime.jpg` und `sample-size-rechner.jpg` sind aus Screenshots ausgeschnitten. Wenn ihr die Originale habt, einfach ersetzen.

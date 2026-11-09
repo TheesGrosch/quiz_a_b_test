@@ -7,7 +7,7 @@
   --green-t:#E1EEE8;
   --ink:#1D211F; --ink-2:#565B57; --paper:#F4F3F0; --line:#DAD8D3;
   --star:#C9C7C2;
-  --sans:"Helvetica Neue",Helvetica,Arial,sans-serif;
+  --sans:"Helvetica Neue",Helvetica,"TeX Gyre Heros","Nimbus Sans",Arial,sans-serif;
   --serif:"IBM Plex Serif",Georgia,serif;
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -92,11 +92,14 @@ body.host{overflow:hidden;color:#fff;background:var(--gray);font-size:min(1vw,1.
 body.host:hover .navhint{opacity:.85}
 .navhint button{border:1px solid rgba(255,255,255,.6);border-radius:2rem;padding:.4rem 1rem;color:#fff}
 
-/* Titel, der in der Mitte die Schrift wechselt (links Grotesk, rechts Serif) */
-.splitT{position:relative;text-align:center;line-height:1.05;white-space:nowrap}
-.splitT .l,.splitT .r{display:block}
-.splitT .l{font-family:var(--sans);font-weight:700;letter-spacing:-.02em;clip-path:inset(-.3em 50% -.3em -1em)}
-.splitT .r{font-family:var(--serif);font-weight:500;position:absolute;inset:0;clip-path:inset(-.3em -1em -.3em 50%)}
+/* Titel, der in der Mitte die Schrift wechselt (links Grotesk, rechts Serif).
+   Die Trennstelle liegt immer in einer Lücke genau auf der Farbgrenze. */
+.splitT{display:flex;align-items:baseline;white-space:nowrap;line-height:1.08}
+.splitT .l,.splitT .r{flex:1 1 0;min-width:0}
+.splitT .l{text-align:right;padding-right:.04em;font-family:var(--sans);font-weight:700;letter-spacing:-.02em}
+.splitT .r{text-align:left;padding-left:.04em;font-family:var(--serif);font-weight:500}
+.splitT.word .l{padding-right:.13em}
+.splitT.word .r{padding-left:.13em}
 .ttop{position:absolute;left:0;right:0;top:3.4rem;font-size:5rem}
 
 /* Animationen */
@@ -139,19 +142,20 @@ body.host:hover .navhint{opacity:.85}
 .t-section{position:absolute;inset:0;display:flex;align-items:center;justify-content:center}
 .secT{width:100%;font-size:7rem}
 
-/* 4–6 · Echtes Ergebnis */
+/* 4–6 · Quiz-Auswertung: Bild links, echtes Ergebnis rechts oben, Publikum rechts unten */
 .rhead{position:absolute;left:0;right:0;top:3.4rem;text-align:center}
 .rhead .splitT{font-size:5rem;margin-top:.8rem}
-.rL{display:flex;flex-direction:column;justify-content:center;padding:6rem 0 0 6.4rem}
-.rnum b{display:block;font-size:8.4rem;font-weight:700;letter-spacing:-.035em;line-height:1;font-variant-numeric:tabular-nums}
-.rnum span{display:block;font-family:var(--serif);font-size:2rem;margin:.5rem 0 2.6rem}
-.rnote{font-family:var(--serif);font-style:italic;font-size:1.6rem;margin-top:-.8rem}
-.rR{display:flex;flex-direction:column;justify-content:center;padding:6rem 0 0 6.4rem}
-.rk{font-family:var(--serif);font-size:2.2rem;margin-bottom:2rem}
-.rrow{display:flex;align-items:baseline;gap:1.6rem;margin-bottom:1.2rem}
-.rrow b{font-size:8.4rem;font-weight:700;letter-spacing:-.035em;line-height:1;min-width:11rem;font-variant-numeric:tabular-nums}
-.rrow span{font-family:var(--serif);font-size:2rem}
-.rsmall{font-family:var(--serif);font-size:1.3rem;margin-top:1.4rem;opacity:.95}
+.rL{display:flex;align-items:center;justify-content:center;padding:13rem 3.4rem 5.4rem 4.6rem}
+.rimg{display:block;max-width:100%;max-height:100%;border-radius:.8rem;box-shadow:0 1rem 2.6rem rgba(0,0,0,.16)}
+.rTop,.rBot{position:absolute;left:55.6rem;width:41rem}
+.rTop{top:14.2rem}
+.rBot{top:32.6rem}
+.rk{font-family:var(--serif);font-size:1.6rem;margin-bottom:1rem}
+.rnums{display:flex;gap:2.8rem}
+.rnum b{display:block;white-space:nowrap;font-size:4.8rem;font-weight:700;letter-spacing:-.03em;line-height:1;font-variant-numeric:tabular-nums}
+.rnum span{display:block;font-family:var(--serif);font-size:1.5rem;margin-top:.45rem}
+.rnote{font-family:var(--serif);font-style:italic;font-size:1.35rem;margin-top:1.2rem}
+.rsmall{font-family:var(--serif);font-size:1.2rem;margin-top:1.1rem;opacity:.95}
 
 /* 7 · Vorgehen (Zeilen) */
 .clabel{position:absolute;top:14rem;font-size:1.45rem}
@@ -235,3 +239,11 @@ body.host:hover .navhint{opacity:.85}
 .srcR li{margin-bottom:1.15rem;padding-left:.6rem}
 .srcR a{color:#fff;word-break:break-all}
 .srcR p{margin-top:.6rem;padding-left:3rem}
+
+/* PDF-Export (?print): Live-Daten ausblenden, ohne Animation */
+.printnote{display:none;font-family:var(--serif);font-style:italic;font-size:1.4rem;opacity:.95}
+body.print .printnote{display:block}
+body.print .rnums.live,body.print .rsmall,body.print .hv,body.print .verdict,
+body.print .counter,body.print .ctrl,body.print .conn,body.print .startbtn,body.print .badge-sim,body.print .navhint,body.print .tn{display:none!important}
+body.print .hnote{position:absolute;left:0;right:0;bottom:8rem;text-align:center}
+body.print .slide,body.print .slide *{transition:none!important}

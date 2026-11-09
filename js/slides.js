@@ -17,6 +17,10 @@
      sources         Quellenliste
      html            komplett freie Folie: { type:'html', html:'…' }
 
+   Titel: Der Schriftwechsel (links Grotesk, rechts Serif) liegt auf der
+   Farbgrenze. Mit „|“ legt ihr die Trennstelle fest: 'Grenzen | der Methode'
+   trennt an der Wortlücke, 'Vorg|ehen' zwischen zwei Buchstaben.
+
    Animationen in freiem HTML:
      class="a a1" … "a a5"   erscheint beim Aufrufen der Folie (gestaffelt)
      data-step="2"           erscheint ab dem 2. Druck auf Leertaste/→
@@ -24,7 +28,8 @@
    ===================================================================== */
 
 const DECK = {
-  footer: 'A/B Testing'
+  footer: 'A/B Testing',
+  hypothesisTitle: 'Hypo|these'   // Titel der Hypothesen-Folien
 };
 
 /* ---------- kleine Grafiken (Wireframes) ---------- */
@@ -54,7 +59,7 @@ const WATCH_SVG = `<svg viewBox="0 0 140 140" class="watch"><rect x="50" y="2" w
 const SLIDES = [
 
   // 1 · Start
-  { type: 'cover', a: 'A', b: 'B', title: 'Testing', names: 'Thees, Lars' },
+  { type: 'cover', a: 'A', b: 'B', title: 'Tes|ting', names: 'Thees, | Lars' },
 
   // 2 · Quiz-Screen mit QR-Code
   { type: 'quiz-lobby',
@@ -63,19 +68,20 @@ const SLIDES = [
     text: 'Scannt den QR-Code mit dem Handy. Drei Fragen, etwa zwei Minuten – kein Wettbewerb, nehmt euch Zeit.' },
 
   // 3 · Quiz-Auswertung
-  { type: 'section', title: 'Quiz-Auswertung' },
+  { type: 'section', title: 'Quiz-Aus|wertung' },
 
-  // 4–6 · echte Ergebnisse (Leertaste zeigt dann, wie viele von euch richtig lagen)
-  { type: 'quiz-result', q: 'q1', brand: 'Ehrenkind',
+  // 4–6 · Quiz-Auswertung: links das Quiz-Bild,
+  //        1. Leertaste → rechts oben echtes Ergebnis, 2. Leertaste → rechts unten richtig/falsch
+  { type: 'quiz-result', q: 'q1', brand: 'Ehren|kind', img: 'img/ehrenkind.jpg',
     numbers: [['+2,14 %', 'Bestellungen'], ['+8,48 %', 'ARPU']] },
-  { type: 'quiz-result', q: 'q2', brand: 'yfood',
+  { type: 'quiz-result', q: 'q2', brand: 'yf|ood', img: 'img/yfood.jpg',
     numbers: [['−6,06 %', 'Bestellungen'], ['−5,00 %', 'ARPU']] },
-  { type: 'quiz-result', q: 'q3', brand: 'Berliner Zeitung',
+  { type: 'quiz-result', q: 'q3', brand: 'Berliner | Zeitung', img: 'img/bz-quiz.jpg',
     numbers: [['+18,23 %', 'digitale Abschlüsse'], ['+333,90 %', 'Micro-Conversions']],
     note: 'Gewinner: Nr. 4 – weißes Pop-up über dem Artikel' },
 
   // 7 · Vorgehen (jede Zeile per Leertaste)
-  { type: 'steps-rows', title: 'Vorgehen', leftLabel: 'Vor dem Test', rightLabel: 'Beispiele',
+  { type: 'steps-rows', title: 'Vorg|ehen', leftLabel: 'Vor dem Test', rightLabel: 'Beispiele',
     rows: [
       { h: 'Problemstatement', p: 'Ziel des A/B Testings festlegen',
         right: abPair('outline', 'filled') },
@@ -86,14 +92,14 @@ const SLIDES = [
     ] },
 
   // 8 · Überraschung
-  { type: 'surprise', kicker: 'Überraschung!', lines: ['Ihr wart Teil', 'eines A/B-Tests.'],
+  { type: 'surprise', kicker: 'Überraschung!', lines: ['Ihr wart | Teil', 'eines | A/B-Tests.'],
     saw: {
       A: ['Regler von 0 bis 20 %', 'Stern bei „Gesunken“', 'Keine Bildunterschriften'],
       B: ['Regler von 0 bis 40 %', 'Kein Stern', 'Wertende Bildunterschriften']
     } },
 
   // 9 · Auswertung des Tests
-  { type: 'section', title: 'Auswertung des Tests' },
+  { type: 'section', title: 'Auswertung | des Tests' },
 
   // 10–12 · Hypothesen (Leertaste zeigt Ergebnis + Ja/Nein)
   { type: 'quiz-hypothesis', q: 'q1', brand: 'Ehrenkind',
@@ -107,7 +113,7 @@ const SLIDES = [
     saw: { A: 'keine Bildunterschriften', B: 'wertende Bildunterschriften' } },
 
   // 13 · Grenzen der Methode (Punkte nacheinander, rechts wechselt das Bild)
-  { type: 'steps-visual', title: 'Grenzen der Methode',
+  { type: 'steps-visual', title: 'Grenzen | der Methode',
     items: [
       { h: 'Nur kleine Schritte', p: 'Welches Element hat für Erfolg gesorgt?',
         visual: `<div class="wfgrid">${abPair('outline', 'filled')}${abPair('outline', 'redesign')}</div>` },
@@ -121,7 +127,7 @@ const SLIDES = [
     ] },
 
   // 14 · Übertragung in unseren Kurs
-  { type: 'split', title: 'Übertragung in unseren Kurs',
+  { type: 'split', title: 'Übertragung | in unseren Kurs',
     left: '<h3 class="bigleft">Klassisches A/B Testing<br>schwer anwendbar</h3>',
     right: `<div class="kursR">
       <div class="ksub">Smartwatch · ÖPNV</div>

@@ -197,14 +197,31 @@ function participant() {
 /* =================================================================
    PRÄSENTATION
    ================================================================= */
-const split = t => `<div class="splitT"><span class="l">${t}</span><span class="r">${t}</span></div>`;
+/* Titel mit Schriftwechsel: links Grotesk, rechts Serif. Die Trennstelle liegt
+   genau auf der Farbgrenze. Mit „|“ im Text legt man sie selbst fest
+   (z. B. 'Grenzen | der Methode' = an der Wortlücke, 'Vorg|ehen' = zwischen zwei
+   Buchstaben). Ohne „|“ wird die Wortlücke nahe der Mitte genommen. */
+function split(t) {
+  t = String(t);
+  let L, R;
+  const i = t.indexOf('|');
+  if (i >= 0) { L = t.slice(0, i); R = t.slice(i + 1); }
+  else {
+    const mid = t.length / 2, sp = [];
+    for (let k = 0; k < t.length; k++) if (t[k] === ' ') sp.push(k);
+    const k = sp.length ? sp.reduce((a, b) => Math.abs(b - mid) < Math.abs(a - mid) ? b : a) : Math.round(mid);
+    L = t.slice(0, k); R = t.slice(k);
+  }
+  const word = /\s$/.test(L) || /^\s/.test(R);
+  return `<div class="splitT${word ? ' word' : ''}"><span class="l">${esc(L.trim())}</span><span class="r">${esc(R.trim())}</span></div>`;
+}
 const foot = () => DECK.footer ? `<div class="deckfoot">${esc(DECK.footer)}</div>` : '';
 
 const RENDER = {
   cover: s => `
     <div class="cv-a a a1">${esc(s.a)}</div><div class="cv-b a a1">${esc(s.b)}</div>
-    <div class="cv-t a a2">${split(esc(s.title))}</div>
-    <div class="cv-n a a3">${split(esc(s.names))}</div>`,
+    <div class="cv-t a a2">${split(s.title)}</div>
+    <div class="cv-n a a3">${split(s.names)}</div>`,
 
   'quiz-lobby': s => `
     <div class="half L lobbyL">
@@ -224,18 +241,18 @@ const RENDER = {
   'quiz-result': s => {
     const q = qById(s.q);
     return `
-    <div class="rhead a a1"><div class="hk">Echtes Ergebnis</div>${split(esc(s.brand))}</div>
-    <div class="half L rL">
-      ${s.numbers.map((n, i) => `<div class="rnum a a${i + 2}"><b>${esc(n[0])}</b><span>${esc(n[1])}</span></div>`).join('')}
-      ${s.note ? `<p class="rnote a a4">${esc(s.note)}</p>` : ''}
+    <div class="rhead a a1"><div class="hk">${esc(s.kicker || 'Quiz-Auswertung')}</div>${split(s.brand)}</div>
+    <div class="half L rL a a2"><img class="rimg" src="${s.img}" alt="${esc(s.brand)}: getestete Varianten"></div>
+    <div class="rTop" data-step="2">
+      <div class="rk">Echtes Ergebnis</div>
+      <div class="rnums">${s.numbers.map(n => `<div class="rnum"><b>${esc(n[0])}</b><span>${esc(n[1])}</span></div>`).join('')}</div>
+      ${s.note ? `<p class="rnote">${esc(s.note)}</p>` : ''}
     </div>
-    <div class="half R rR">
-      <div data-step="2">
-        <div class="rk">Und ihr?</div>
-        <div class="rrow"><b data-r="right">–</b><span>lagen richtig</span></div>
-        <div class="rrow"><b data-r="wrong">–</b><span>lagen falsch</span></div>
-        <p class="rsmall">Richtig: ${esc(q.correctLabel)}${q.kind === 'slider' ? ` (±${fmt(q.tolerance, 0)} Prozentpunkte)` : ''}</p>
-      </div>
+    <div class="rBot" data-step="3">
+      <div class="rk">Und ihr?</div>
+      <div class="rnums live"><div class="rnum"><b data-r="right">–</b><span>lagen richtig</span></div><div class="rnum"><b data-r="wrong">–</b><span>lagen falsch</span></div></div>
+      <p class="rsmall">Richtig: ${esc(q.correctLabel)}${q.kind === 'slider' ? ` (±${fmt(q.tolerance, 0)} Prozentpunkte)` : ''}</p>
+      <p class="printnote">Wurde live im Vortrag ausgewertet.</p>
     </div>${foot()}`;
   },
 
@@ -252,7 +269,7 @@ const RENDER = {
 
   surprise: s => `
     <div class="sk a a1">${esc(s.kicker)}</div>
-    <div class="stitle a a1">${s.lines.map(l => split(esc(l))).join('')}</div>
+    <div class="stitle a a1">${s.lines.map(l => split(l)).join('')}</div>
     ${['A', 'B'].map(g => `
     <div class="scol ${g === 'A' ? 'L' : 'R'} a a3">
       <div class="tname">Team ${g}</div><div class="tn" data-n="${g}"></div>
@@ -263,7 +280,7 @@ const RENDER = {
   'quiz-hypothesis': (s, idx) => `
     <div class="hhead">
       <div class="hk a a1">Auswertung ${idx.n} / ${idx.of} · ${esc(s.brand)}</div>
-      <div class="a a1">${split('Hypothese')}</div>
+      <div class="a a1">${split(DECK.hypothesisTitle || 'Hypo|these')}</div>
       <p class="hyp a a2">${esc(s.hypothesis)}</p>
     </div>
     ${['A', 'B'].map(g => `
@@ -272,6 +289,7 @@ const RENDER = {
       <div class="hv" data-step="2"><b data-h="${g}">–</b><span>lagen richtig</span><small data-hs="${g}"></small></div>
     </div>`).join('')}
     <div class="verdict" data-step="2"><div class="pill" data-v>–</div><p data-vt></p></div>
+    <p class="printnote hnote">Ergebnis wurde live im Vortrag ausgewertet.</p>
     ${foot()}`,
 
   'steps-visual': s => {
@@ -304,13 +322,14 @@ const RENDER = {
 };
 
 function host() {
-  document.body.className = 'host';
+  document.body.className = 'host' + (P.has('print') ? ' print' : '');
   let topic = P.get('s') || store.get('abHostTopic');
   if (!topic) { topic = 'hm-abtest-' + rid(12); store.set('abHostTopic', topic); }
   const people = new Map();
   let sim = store.get('abSim_' + topic) || false, simPeople = null;
   const base = location.origin + location.pathname;
   const joinUrl = base + '?s=' + encodeURIComponent(topic) + (P.get('relay') ? '&relay=' + encodeURIComponent(P.get('relay')) : '');
+  const qrUrl = P.get('qr') || joinUrl; // ?qr=… nur für den PDF-Export
 
   /* --- Folien bauen --- */
   const hypTotal = SLIDES.filter(s => s.type === 'quiz-hypothesis').length;
@@ -324,8 +343,8 @@ function host() {
   const stepsOf = el => Math.max(1, ...$$('[data-step],[data-only]', el).map(x => +(x.dataset.step || x.dataset.only)));
 
   /* --- QR --- */
-  $$('[data-qr]').forEach(el => { try { const qr = qrcode(0, 'M'); qr.addData(joinUrl); qr.make(); el.innerHTML = qr.createSvgTag({ scalable: true, margin: 0 }); } catch (e) { el.textContent = 'QR-Fehler'; } });
-  $$('[data-qrurl]').forEach(el => el.textContent = joinUrl.replace(/^https?:\/\//, ''));
+  $$('[data-qr]').forEach(el => { try { const qr = qrcode(0, 'M'); qr.addData(qrUrl); qr.make(); el.innerHTML = qr.createSvgTag({ scalable: true, margin: 0 }); } catch (e) { el.textContent = 'QR-Fehler'; } });
+  $$('[data-qrurl]').forEach(el => el.textContent = qrUrl.replace(/^https?:\/\//, ''));
 
   /* --- Navigation --- */
   let cur = store.get('abPos_' + topic) || { s: 0, step: 1 };
