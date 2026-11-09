@@ -238,7 +238,8 @@ body.host:hover .navhint{opacity:.85}
 .srcR ol{padding-left:2.4rem}
 .srcR li{margin-bottom:1.15rem;padding-left:.6rem}
 .srcR a{color:#fff;word-break:break-all}
-.srcR p{margin-top:.6rem;padding-left:3rem}
+.srcR p{margin-top:.6rem;padding-left:3rem;font-size:1.18rem;line-height:1.45}
+.srcR p b{font-weight:500}
 
 /* PDF-Export (?print): Live-Daten ausblenden, ohne Animation */
 .printnote{display:none;font-family:var(--serif);font-style:italic;font-size:1.4rem;opacity:.95}
