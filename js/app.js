@@ -454,9 +454,10 @@ function host() {
         pill.textContent = yes ? 'Ja' : 'Nein';
         pill.className = 'pill ' + (yes ? 'yes' : 'no');
         const sig = p < 0.05 ? 'statistisch signifikant' : 'nicht signifikant';
+        const pp = n => n + (Math.abs(n) === 1 ? ' Prozentpunkt' : ' Prozentpunkte');
         vt.textContent = yes
-          ? `Team A lag ${diff} Prozentpunkte häufiger richtig · ${sig} (${ps})`
-          : (diff === 0 ? `Beide Teams lagen gleich oft richtig (${ps})` : `Team B lag sogar ${-diff} Prozentpunkte häufiger richtig · ${sig} (${ps})`);
+          ? `Team A lag ${pp(diff)} häufiger richtig · ${sig} (${ps})`
+          : (diff === 0 ? `Beide Teams lagen gleich oft richtig (${ps})` : `Team B lag sogar ${pp(-diff)} häufiger richtig · ${sig} (${ps})`);
       }
     });
   }
